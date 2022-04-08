@@ -6,9 +6,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Water } from "three/examples/jsm/objects/Water.js";
 import { Sky } from "three/examples/jsm/objects/Sky.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { nanoid } from "nanoid";
 
 let camera, scene, renderer;
-let controls, water, sun, frustum, cameraViewProjectionMatrix;
+let controls, water, sun, frustum, cameraViewProjectionMatrix, raycaster, mousePointer;
 
 let KeyActive = {
     up: false,
@@ -21,15 +22,9 @@ let KeyActive = {
 
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
-var baseTexture = textureLoader.load(
-    "assets/boat-2/textures/boat_baseColor.png"
-);
-var normalTexture = textureLoader.load(
-    "assets/boat-2/textures/boat_normal.png"
-);
-var metalnessTexture = textureLoader.load(
-    "assets/boat-2/textures/boat_metallicRoughness.png"
-);
+var baseTexture = textureLoader.load("assets/boat-2/textures/boat_baseColor.png");
+var normalTexture = textureLoader.load("assets/boat-2/textures/boat_normal.png");
+var metalnessTexture = textureLoader.load("assets/boat-2/textures/boat_metallicRoughness.png");
 
 function random(min, max) {
     return Math.random() * (max - min) + min;
@@ -75,20 +70,75 @@ class Boat {
 const boat = new Boat();
 
 class Trash {
+    dissapearing = false;
+    id = undefined;
+    removed = false;
+    seen = false;
+    lastDistanceToBoat = 0;
+    uuid = undefined;
+
     constructor(_scene) {
+        this.id = nanoid(24);
         scene.add(_scene);
+        this.uuid = _scene.uuid;
         _scene.scale.set(1.5, 1.5, 1.5);
-        if (Math.random() > 0.6) {
-            _scene.position.set(random(-100, 100), -0.5, random(-100, 100));
+        let randomNumber = random(0, 100);
+        if (randomNumber < 25) {
+            // North side spawn area
+            _scene.position.set(random(150, -150), -0.5, random(-15, -65));
+            this.velocityZ = random(0.05, 0.2);
+            this.velocityY = random(-0.1, 0.2);
+        } else if (randomNumber < 50) {
+            // East side spawn area
+            _scene.position.set(random(120, 160), -0.5, random(-100, 200));
+            this.velocityZ = random(-0.1, 0.1);
+            this.velocityY = random(-0.2, -0.1);
+        } else if (randomNumber < 75) {
+            // South side spawn area
+            _scene.position.set(random(150, -150), -0.5, random(115, 165));
+            this.velocityZ = random(-0.1, -0.2);
+            this.velocityY = random(0.1, -0.1);
         } else {
-            _scene.position.set(random(-500, 500), -0.5, random(-1000, 1000));
+            _scene.position.set(random(-120, -160), -0.5, random(-100, 200));
+            this.velocityZ = random(-0.1, 0.1);
+            this.velocityY = random(0.2, 0.1);
         }
 
         this.trash = _scene;
     }
 
     update() {
-        this.trash.translateZ(-0.2);
+        this.trash.translateZ(this.velocityZ);
+        this.trash.translateX(this.velocityY);
+
+        if (this.dissapearing == false) {
+            if (!frustum.containsPoint(this.trash.position)) {
+                if (this.seen) {
+                    this.dissapearing = true;
+                    setTimeout(() => {
+                        scene.remove(this.trash);
+                        this.removed = true;
+                    }, 1000);
+                } else {
+                    let boatPostion = boat.boat.position;
+                    let trashPosition = this.trash.position;
+                    if (this.lastDistanceToBoat == 0) {
+                        this.lastDistanceToBoat = boatPostion.distanceTo(trashPosition);
+                    } else {
+                        let currentDistance = boatPostion.distanceTo(trashPosition);
+                        if (currentDistance > this.lastDistanceToBoat) {
+                            this.dissapearing = true;
+                            this.removed = true;
+                            scene.remove(this.trash);
+                        } else {
+                            this.lastDistanceToBoat = currentDistance;
+                        }
+                    }
+                }
+            } else {
+                this.seen = true;
+            }
+        }
     }
 }
 
@@ -109,7 +159,9 @@ async function createTrash() {
 }
 
 let trashes = [];
-const TRASH_COUNT = 500;
+let trashesHovered = [];
+const TRASH_COUNT = 150;
+let boolTest = true;
 
 init();
 animate();
@@ -121,20 +173,17 @@ async function init() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     document.body.appendChild(renderer.domElement);
 
-    frustum = new THREE.Frustum();
-    cameraViewProjectionMatrix = new THREE.Matrix4();
-
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(
-        55,
-        window.innerWidth / window.innerHeight,
-        1,
-        20000
-    );
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 20000);
     camera.position.set(5, 100, 50);
     const ambientLight = new THREE.AmbientLight(0x404040, 1); // soft white light
     scene.add(ambientLight);
+
+    frustum = new THREE.Frustum();
+    cameraViewProjectionMatrix = new THREE.Matrix4();
+    raycaster = new THREE.Raycaster();
+    mousePointer = new THREE.Vector2(0, 0);
 
     sun = new THREE.Vector3();
 
@@ -145,12 +194,9 @@ async function init() {
     water = new Water(waterGeometry, {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: new THREE.TextureLoader().load(
-            "assets/waternormals.jpg",
-            function (texture) {
-                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            }
-        ),
+        waterNormals: new THREE.TextureLoader().load("assets/waternormals.jpg", function (texture) {
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        }),
         sunDirection: new THREE.Vector3(),
         sunColor: 0xffffff,
         waterColor: 0x001e0f,
@@ -233,6 +279,10 @@ async function init() {
             KeyActive.leftClick = false;
         }
     });
+    window.addEventListener("mousemove", (ev) => {
+        mousePointer.x = (ev.clientX / window.innerWidth) * 2 - 1;
+        mousePointer.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+    });
 }
 
 function onWindowResize() {
@@ -253,14 +303,23 @@ function debounce(func, timeout = 1000 / 60) {
 }
 
 function CheckWithinViewbox() {
-    camera.updateMatrixWorld();
-    camera.matrixWorldInverse.invert(camera.matrixWorld);
-    // cameraViewProjectionMatrix.multiplyMatrices(
-    //     camera.projectionMatix,
-    //     camera.matrixWorldInverse
-    // );
-
+    cameraViewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     frustum.setFromProjectionMatrix(cameraViewProjectionMatrix);
+}
+
+function RaycasterRender() {
+    raycaster.setFromCamera(mousePointer, camera);
+    trashesHovered = raycaster.intersectObjects(
+        trashes.map((x) => x.trash),
+        true
+    );
+
+    if (trashesHovered.length > 0) {
+        const object = trashes.filter((x) => x.trash.children[0].children[0].children[0].children[0].children[0].uuid == trashesHovered[0].object.uuid)[0];
+        console.log(object);
+        object.removed = true;
+        scene.remove(object.trash);
+    }
 }
 
 function animate() {
@@ -268,9 +327,22 @@ function animate() {
     render();
     boat.update();
     CheckWithinViewbox();
+    RaycasterRender();
 
     for (let i = 0; i < trashes.length; i++) {
         trashes[i].update();
+    }
+    trashes = trashes.filter((x) => x.removed == false);
+    if (boatModel != null) {
+        while (trashes.length <= TRASH_COUNT) {
+            const trash = new Trash(boatModel.clone());
+            trashes.push(trash);
+        }
+    }
+
+    if (boolTest && trashes.length > 0) {
+        boolTest = false;
+        console.log(trashes);
     }
 }
 
