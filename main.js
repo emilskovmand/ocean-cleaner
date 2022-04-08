@@ -90,13 +90,13 @@ async function loadModel(url) {
 let boatModel = null
 async function createTrash() {
   if (!boatModel) {
-    boatModel = await loadModel("assets/trash/scene.gltf")
+    boatModel = await loadModel("assets/barrels/scene.gltf")
   }
   return new Trash(boatModel.clone())
 }
 
 let trashes = []
-const TRASH_COUNT = 500
+const TRASH_COUNT = 200
 
 init();
 animate();
@@ -190,6 +190,7 @@ async function init() {
   const waterUniforms = water.material.uniforms;
 
   for (let i = 0; i < TRASH_COUNT; i++) {
+    
     const trash = await createTrash()
     trashes.push(trash)
   }

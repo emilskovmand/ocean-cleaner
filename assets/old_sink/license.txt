@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old Sink
+* source:	https://sketchfab.com/3d-models/old-sink-4e8ce1e067b6426494cf724dbe4e0f71
+* author:	shedmon (https://sketchfab.com/shedmon)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old Sink" (https://sketchfab.com/3d-models/old-sink-4e8ce1e067b6426494cf724dbe4e0f71) by shedmon (https://sketchfab.com/shedmon) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
