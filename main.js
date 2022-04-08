@@ -77,11 +77,46 @@ const boat = new Boat();
 class Trash {
     constructor(_scene) {
         scene.add(_scene);
-        _scene.scale.set(1.5, 1.5, 1.5);
-        if (Math.random() > 0.6) {
-            _scene.position.set(random(-100, 100), -0.5, random(-100, 100));
+
+        if(_scene.name === 'Garbage Bag'){
+          _scene.scale.set(1, 1, 1);
+          if (Math.random() > 0.6) {
+            _scene.position.set(random(-100, 100), 0.5, random(-100, 100));
         } else {
-            _scene.position.set(random(-500, 500), -0.5, random(-1000, 1000));
+            _scene.position.set(random(-500, 500), 0.5, random(-1000, 1000));
+        }
+        }
+        if(_scene.name === 'Old_Sink'){
+          _scene.scale.set(0.1, 0.1, 0.1);
+          if (Math.random() > 0.6) {
+            _scene.position.set(random(-100, 100), 1, random(-100, 100));
+        } else {
+            _scene.position.set(random(-500, 500), 1, random(-1000, 1000));
+        }
+        }
+        if(_scene.name === 'Jerrycan'){
+          _scene.scale.set(10, 10, 10);
+          if (Math.random() > 0.6) {
+            _scene.position.set(random(-100, 100), 0.5, random(-100, 100));
+        } else {
+            _scene.position.set(random(-500, 500), 0.5, random(-1000, 1000));
+        }
+        }
+        if(_scene.name === 'Sneakers'){
+          _scene.scale.set(100, 100, 100);
+          if (Math.random() > 0.6) {
+            _scene.position.set(random(-100, 100), 7.5, random(-100, 100));
+        } else {
+            _scene.position.set(random(-500, 500), 7.5, random(-1000, 1000));
+        }
+        }
+        if(_scene.name === 'Barrels'){
+          _scene.scale.set(0.5, 0.5, 0.5);
+          if (Math.random() > 0.6) {
+            _scene.position.set(random(-100, 100), -1, random(-100, 100));
+        } else {
+            _scene.position.set(random(-500, 500), -1, random(-1000, 1000));
+        }
         }
 
         this.trash = _scene;
@@ -95,21 +130,47 @@ class Trash {
 async function loadModel(url) {
     return new Promise((resolve, reject) => {
         loader.load(url, (gltf) => {
-            resolve(gltf.scene);
+          resolve(gltf.scene);
         });
     });
 }
 
-let boatModel = null;
+let boatModel, barrelModel, jerrycanModel, oldSinkModel, sneakerModel, oldTorchModel   = null;
+
 async function createTrash() {
   if (!boatModel) {
-    boatModel = await loadModel("assets/barrels/scene.gltf")
+    boatModel = await loadModel("assets/trash/scene.gltf")
   }
   return new Trash(boatModel.clone())
 }
+async function createBarrels() {
+  if (!barrelModel) {
+    barrelModel = await loadModel("assets/barrels/scene.gltf")
+  }
+  return new Trash(barrelModel.clone())
+}
+async function createJerrycan() {
+  if (!jerrycanModel) {
+    jerrycanModel = await loadModel("assets/jerrycan/scene.gltf")
+  }
+  return new Trash(jerrycanModel.clone())
+}
+async function createOldSink() {
+  if (!oldSinkModel) {
+    oldSinkModel = await loadModel("assets/old_sink/scene.gltf")
+  }
+  return new Trash(oldSinkModel.clone())
+}
+async function createSneakers() {
+  if (!sneakerModel) {
+    sneakerModel = await loadModel("assets/sneakers/scene.gltf")
+    console.log(sneakerModel)
+  }
+  return new Trash(sneakerModel.clone())
+}
 
 let trashes = []
-const TRASH_COUNT = 200
+const TRASH_COUNT = 400
 
 init();
 animate();
@@ -207,8 +268,29 @@ async function init() {
     const waterUniforms = water.material.uniforms;
 
     for (let i = 0; i < TRASH_COUNT; i++) {
+      const randomNumber = Math.floor(Math.random() * 5)
+      switch(randomNumber){
+      case 0:
         const trash = await createTrash();
         trashes.push(trash);
+        break
+      case 1:
+        const barrels = await createBarrels();
+        trashes.push(barrels);
+        break
+      case 2:
+        const jerrycan = await createJerrycan();
+        trashes.push(jerrycan);
+        break
+      case 3:
+        const oldsink = await createOldSink();
+        trashes.push(oldsink);
+        break
+      case 4:
+        const sneakers = await createSneakers();
+        trashes.push(sneakers);
+        break
+    }
     }
 
     window.addEventListener("resize", onWindowResize);
