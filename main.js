@@ -196,11 +196,6 @@ async function init() {
 
     updateSun();
 
-  for (let i = 0; i < TRASH_COUNT; i++) {
-    
-    const trash = await createTrash()
-    trashes.push(trash)
-  }
     controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.set(5, -0.12, 50);
