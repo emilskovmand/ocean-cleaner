@@ -311,6 +311,7 @@ async function init() {
         mousePointer.y = -(ev.touches[0].clientY / window.innerHeight) * 2 + 1;
         mousePointer.clientX = ev.touches[0].clientX;
         mousePointer.clientY = ev.touches[0].clientY;
+        KeyActive.touch = true;
     });
     window.addEventListener("touchend", (ev) => {
         KeyActive.touch = false;
@@ -366,9 +367,15 @@ function addProgress(amount = 1) {
             opacity: 0,
         }
     );
+
     setTimeout(() => {
         document.getElementById(`point-${pointUpId}`).remove();
     }, 1000);
+
+    if (trashProgress.points == 20) {
+        let modal = document.getElementById("modal");
+        modal.style.display = "block";
+    }
 }
 
 function RaycasterRender() {
