@@ -11,6 +11,7 @@ import { gsap } from "gsap";
 import boatBaseTextureUrl from "./assets/boat-2/textures/boat_baseColor.png";
 import boatNormalTextureUrl from "./assets/boat-2/textures/boat_normal.png";
 import boatMetallicTextureUrl from "./assets/boat-2/textures/boat_metallicRoughness.png";
+import waterModelsUrl from "./assets/waternormals.jpg";
 
 let camera, scene, renderer;
 let controls, water, sun, frustum, cameraViewProjectionMatrix, raycaster, mousePointer;
@@ -203,7 +204,7 @@ async function init() {
     water = new Water(waterGeometry, {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: new THREE.TextureLoader().load("assets/waternormals.jpg", function (texture) {
+        waterNormals: new THREE.TextureLoader().load(waterModelsUrl, function (texture) {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         }),
         sunDirection: new THREE.Vector3(),
