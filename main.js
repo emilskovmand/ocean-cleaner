@@ -8,6 +8,12 @@ import { Sky } from "three/examples/jsm/objects/Sky.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { nanoid } from "nanoid";
 import { gsap } from "gsap";
+import boatBaseTextureUrl from "./assets/boat-2/textures/boat_baseColor.png";
+import boatNormalTextureUrl from "./assets/boat-2/textures/boat_normal.png";
+import boatMetallicTextureUrl from "./assets/boat-2/textures/boat_metallicRoughness.png";
+// Models
+import trashModelUrl from "./assets/trash/scene.gltf?raw";
+import boatModelUrl from "./assets/boat-2/scene.gltf?raw";
 
 let camera, scene, renderer;
 let controls, water, sun, frustum, cameraViewProjectionMatrix, raycaster, mousePointer;
@@ -28,9 +34,9 @@ let trashProgress = {
 
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
-var baseTexture = textureLoader.load("./assets/boat-2/textures/boat_baseColor.png");
-var normalTexture = textureLoader.load("./assets/boat-2/textures/boat_normal.png");
-var metalnessTexture = textureLoader.load("./assets/boat-2/textures/boat_metallicRoughness.png");
+var baseTexture = textureLoader.load(boatBaseTextureUrl);
+var normalTexture = textureLoader.load(boatNormalTextureUrl);
+var metalnessTexture = textureLoader.load(boatMetallicTextureUrl);
 
 function random(min, max) {
     return Math.random() * (max - min) + min;
@@ -38,7 +44,7 @@ function random(min, max) {
 
 class Boat {
     constructor() {
-        loader.load("./assets/boat-2/scene.gltf", (gltf) => {
+        loader.load(boatModelUrl, (gltf) => {
             scene.add(gltf.scene);
             gltf.scene.scale.set(0.05, 0.05, 0.05);
             gltf.scene.position.set(5, -0.12, 50);
@@ -159,7 +165,7 @@ async function loadModel(url) {
 let boatModel = null;
 async function createTrash() {
     if (!boatModel) {
-        boatModel = await loadModel("./assets/trash/scene.gltf");
+        boatModel = await loadModel(trashModelUrl);
     }
     return new Trash(boatModel.clone());
 }
