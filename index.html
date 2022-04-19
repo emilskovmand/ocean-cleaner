@@ -4,55 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./assets/ui/trash-bag.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style.css">
     <title>Vite App</title>
   </head>
   <body>
     <div id="app">
-      <div id="modal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-            <img src="https://assets01.teamassets.net/assets/images/teamseas-logo.png" alt="TeamSeas" />
-            <h2>Great Job!</h2>
-            <span class="close">&times;</span>
-          </div>
-          <div class="modal-body">
-            <p>Damn, you did a great job cleaning the virtual seas!</p>
-            <p>Now help the professionals do it on the real seas</p>
-          </div>
-          <div class="modal-footer">
-            <span href="https://teamseas.org/">Visit TeamSeas.org to learn about their cause</span>
-            <button id="visitButton">Visit</button>
-            <script>
-              document.getElementById('visitButton').onclick = function () {
-                location.href = 'https://www.teamseas.org/';
-              };
-              document.getElementsByClassName('close')[0].onclick = function () {
-                modal.style.display = 'none';
-              };
-
-              let modal = document.getElementById('modal');
-              window.onclick = function (event) {
-                if (event.target == modal) {
-                  modal.style.display = 'none';
-                }
-              };
-            </script>
-          </div>
-        </div>
-      </div>
       <div id="ui-container">
         <div id="ui-container-wrapper">
           <div class="guide-text">
             <p>Click the trash bags to collect points!</p>
           </div>
-          <div class="trash-bar-wrapper">
-            <div class="trash-bar-container">
-              <p id="trash-progress">0 / 20</p>
-              <div id="trash-bar" class="trash-bar-progresser"></div>
+            <div class="trash-bar-wrapper">
+              <div class="trash-bar-container">
+                <p id="trash-progress">0 / 20</p>
+                <div id="trash-bar" class="trash-bar-progresser">
+
+                </div>
+              </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
