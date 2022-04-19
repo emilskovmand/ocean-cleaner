@@ -35,6 +35,8 @@ let trashProgress = {
 var waveSound = document.getElementById("wave-sound");
 var splashSound = document.getElementById("splash-sound");
 
+document.getElementById("trash-progress").innerText = `${trashProgress.points} / ${trashProgress.fullFill}`;
+
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 var baseTexture = textureLoader.load(boatBaseTextureUrl);
