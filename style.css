@@ -26,6 +26,12 @@
 	transform: translateX(-50%);
 }
 
+@media (max-width: 600px) {
+	.trash-bar-wrapper {
+		bottom: 50px;
+	}
+}
+
 .trash-bar-container {
 	position: relative;
 	height: 30px;
