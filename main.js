@@ -296,10 +296,10 @@ async function init() {
         mousePointer.clientY = ev.clientY;
     });
     window.addEventListener("touchstart", (ev) => {
-        mousePointer.x = (ev.clientX / window.innerWidth) * 2 - 1;
-        mousePointer.y = -(ev.clientY / window.innerHeight) * 2 + 1;
-        mousePointer.clientX = ev.clientX;
-        mousePointer.clientY = ev.clientY;
+        mousePointer.x = (ev.touches[0].clientX / window.innerWidth) * 2 - 1;
+        mousePointer.y = -(ev.touches[0].clientY / window.innerHeight) * 2 + 1;
+        mousePointer.clientX = ev.touches[0].clientX;
+        mousePointer.clientY = ev.touches[0].clientY;
         KeyActive.leftClick = true;
     });
     window.addEventListener("touchend", (ev) => {
