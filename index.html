@@ -4,10 +4,27 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div id="ui-container">
+        <div id="ui-container-wrapper">
+          <div class="guide-text">
+            <p>Click the trash bags to collect points!</p>
+          </div>
+            <div class="trash-bar-wrapper">
+              <div class="trash-bar-container">
+                <p id="trash-progress">0 / 20</p>
+                <div class="trash-bar-progresser">
+
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

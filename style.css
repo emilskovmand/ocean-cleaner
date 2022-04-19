@@ -1,5 +1,75 @@
+@font-face {
+	font-family: yoster;
+	src: url(./assets/fonts/yoster.ttf);
+  }
+
 *{
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+#ui-container {
+  position: absolute;
+}
+
+#ui-container-wrapper {
+	position: relative;
+	height: 100vh;
+	width: 100vw;
+}
+
+.trash-bar-wrapper {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.trash-bar-container {
+	position: relative;
+	height: 20px;
+	width: 200px;
+	background-color: rgba(0, 0, 0, 0.15);
+	border-radius: 25px;
+	z-index: -1;
+}
+
+p {
+	user-select: none;
+}
+
+.trash-bar-progresser {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -1;
+	height: 25px;
+	width: 0%;
+	background: linear-gradient(rgba(233, 81, 81, 0.415), rgba(233, 101, 81, 0.715));
+	overflow-x: hidden;
+}
+
+.trash-bar-container p {
+	text-align: center;
+	font-family: yoster;
+	color: white;
+}
+
+.plus-point-nudge {
+	color: white;
+	position: absolute;
+	display: block;
+	font-style: italic;
+	user-select: none;
+}
+
+.guide-text {
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	opacity: .7;
+	font-family: yoster;
+	color: white;
+	transform: translateX(-50%);
 }

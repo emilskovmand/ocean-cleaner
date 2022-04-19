@@ -7,6 +7,7 @@ import { Water } from "three/examples/jsm/objects/Water.js";
 import { Sky } from "three/examples/jsm/objects/Sky.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { nanoid } from "nanoid";
+import { gsap } from "gsap";
 
 let camera, scene, renderer;
 let controls, water, sun, frustum, cameraViewProjectionMatrix, raycaster, mousePointer;
@@ -18,6 +19,11 @@ let KeyActive = {
     right: false,
     leftClick: false,
     rightClick: false,
+};
+
+let trashProgress = {
+    points: 0,
+    fullFill: 20,
 };
 
 const loader = new GLTFLoader();
@@ -247,7 +253,7 @@ async function init() {
     controls.target.set(5, -0.12, 50);
     controls.minDistance = 40.0;
     controls.maxDistance = 200.0;
-    // controls.enabled = false;
+    controls.enabled = false;
     controls.update();
 
     const waterUniforms = water.material.uniforms;
@@ -262,26 +268,28 @@ async function init() {
     window.addEventListener("keydown", function (ev) {});
     window.addEventListener("keyup", function (ev) {});
     window.addEventListener("mousedown", (ev) => {
-        if (ev.button == 1) {
+        if (ev.button == 0) {
             // left Mouse Button
             KeyActive.leftClick = true;
-        } else if (ev.button == 1) {
+        } else if (ev.button == 2) {
             // Right Mouse Button
-            KeyActive.leftClick = true;
+            KeyActive.rightClick = true;
         }
     });
     window.addEventListener("mouseup", (ev) => {
-        if (ev.button == 1) {
+        if (ev.button == 0) {
             // left Mouse Button
             KeyActive.leftClick = false;
-        } else if (ev.button == 1) {
+        } else if (ev.button == 2) {
             // Right Mouse Button
-            KeyActive.leftClick = false;
+            KeyActive.rightClick = false;
         }
     });
     window.addEventListener("mousemove", (ev) => {
         mousePointer.x = (ev.clientX / window.innerWidth) * 2 - 1;
         mousePointer.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+        mousePointer.clientX = ev.clientX;
+        mousePointer.clientY = ev.clientY;
     });
 }
 
@@ -307,6 +315,37 @@ function CheckWithinViewbox() {
     frustum.setFromProjectionMatrix(cameraViewProjectionMatrix);
 }
 
+function addProgress(amount = 1) {
+    var bar = document.querySelector(".trash-bar-progresser");
+    var trashParagrah = document.getElementById("trash-progress");
+    trashProgress.points += amount;
+    bar.style.width = (trashProgress.points / trashProgress.fullFill) * 100 + "%";
+    if ((trashProgress.points / trashProgress.fullFill) * 100 >= 100) {
+        trashParagrah.innerText = "Task Completed!";
+    } else {
+        trashParagrah.innerText = `${trashProgress.points} / ${trashProgress.fullFill}`;
+    }
+
+    var uiContainer = document.getElementById("ui-container-wrapper");
+    var pointUpId = nanoid(12);
+    uiContainer.innerHTML += `<span id="point-${pointUpId}" style="left: ${mousePointer.clientX - 3}px;top: ${mousePointer.clientY - 5}px;" class="plus-point-nudge">+ 1</span>`;
+    gsap.fromTo(
+        document.getElementById(`point-${pointUpId}`),
+        {
+            opacity: 1,
+            duration: 1,
+            translateY: 0,
+        },
+        {
+            translateY: -30,
+            opacity: 0,
+        }
+    );
+    setTimeout(() => {
+        document.getElementById(`point-${pointUpId}`).remove();
+    }, 1000);
+}
+
 function RaycasterRender() {
     raycaster.setFromCamera(mousePointer, camera);
     trashesHovered = raycaster.intersectObjects(
@@ -314,11 +353,11 @@ function RaycasterRender() {
         true
     );
 
-    if (trashesHovered.length > 0) {
+    if (trashesHovered.length > 0 && KeyActive.leftClick) {
         const object = trashes.filter((x) => x.trash.children[0].children[0].children[0].children[0].children[0].uuid == trashesHovered[0].object.uuid)[0];
-        console.log(object);
         object.removed = true;
         scene.remove(object.trash);
+        addProgress(1);
     }
 }
 
@@ -338,11 +377,6 @@ function animate() {
             const trash = new Trash(boatModel.clone());
             trashes.push(trash);
         }
-    }
-
-    if (boolTest && trashes.length > 0) {
-        boolTest = false;
-        console.log(trashes);
     }
 }
 
