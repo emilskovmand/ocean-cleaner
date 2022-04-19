@@ -81,49 +81,25 @@ class Trash {
         this.id = nanoid(24);
         scene.add(_scene);
         this.uuid = _scene.uuid;
+        _scene.scale.set(1.5, 1.5, 1.5);
         let randomNumber = random(0, 100);
-        let yCoordinate = 0.5;
-
-        if (_scene.name === "Garbage Bag") {
-            _scene.scale.set(1, 1, 1);
-            yCoordinate = 0.5;
-        }
-        if (_scene.name === "Old_Sink") {
-            _scene.scale.set(0.1, 0.1, 0.1);
-            yCoordinate = 1;
-        }
-        if (_scene.name === "Jerrycan") {
-            _scene.scale.set(10, 10, 10);
-            yCoordinate = 0.5;
-        }
-        if (_scene.name === "Sneakers") {
-            _scene.scale.set(100, 100, 100);
-            yCoordinate = 7.5;
-        }
-
-        if (_scene.name === "Barrels") {
-            _scene.scale.set(0.5, 0.5, 0.5);
-            yCoordinate = -1;
-        }
-
         if (randomNumber < 25) {
             // North side spawn area
-            _scene.position.set(random(150, -150), yCoordinate, random(-15, -65));
+            _scene.position.set(random(150, -150), -0.5, random(-15, -65));
             this.velocityZ = random(0.05, 0.2);
             this.velocityY = random(-0.1, 0.2);
         } else if (randomNumber < 50) {
             // East side spawn area
-            _scene.position.set(random(120, 160), yCoordinate, random(-100, 200));
+            _scene.position.set(random(120, 160), -0.5, random(-100, 200));
             this.velocityZ = random(-0.1, 0.1);
             this.velocityY = random(-0.2, -0.1);
         } else if (randomNumber < 75) {
             // South side spawn area
-            _scene.position.set(random(150, -150), yCoordinate, random(115, 165));
+            _scene.position.set(random(150, -150), -0.5, random(115, 165));
             this.velocityZ = random(-0.1, -0.2);
             this.velocityY = random(0.1, -0.1);
         } else {
-            // West side spawn area
-            _scene.position.set(random(-120, -160), yCoordinate, random(-100, 200));
+            _scene.position.set(random(-120, -160), -0.5, random(-100, 200));
             this.velocityZ = random(-0.1, 0.1);
             this.velocityY = random(0.2, 0.1);
         }
@@ -174,43 +150,12 @@ async function loadModel(url) {
     });
 }
 
-let boatModel,
-    barrelModel,
-    jerrycanModel,
-    oldSinkModel,
-    sneakerModel,
-    oldTorchModel = null;
-
+let boatModel = null;
 async function createTrash() {
     if (!boatModel) {
         boatModel = await loadModel("assets/trash/scene.gltf");
     }
     return new Trash(boatModel.clone());
-}
-async function createBarrels() {
-    if (!barrelModel) {
-        barrelModel = await loadModel("assets/barrels/scene.gltf");
-    }
-    return new Trash(barrelModel.clone());
-}
-async function createJerrycan() {
-    if (!jerrycanModel) {
-        jerrycanModel = await loadModel("assets/jerrycan/scene.gltf");
-    }
-    return new Trash(jerrycanModel.clone());
-}
-async function createOldSink() {
-    if (!oldSinkModel) {
-        oldSinkModel = await loadModel("assets/old_sink/scene.gltf");
-    }
-    return new Trash(oldSinkModel.clone());
-}
-async function createSneakers() {
-    if (!sneakerModel) {
-        sneakerModel = await loadModel("assets/sneakers/scene.gltf");
-        console.log(sneakerModel);
-    }
-    return new Trash(sneakerModel.clone());
 }
 
 let trashes = [];
@@ -308,29 +253,8 @@ async function init() {
     const waterUniforms = water.material.uniforms;
 
     for (let i = 0; i < TRASH_COUNT; i++) {
-        const randomNumber = Math.floor(Math.random() * 5);
-        switch (randomNumber) {
-            case 0:
-                const trash = await createTrash();
-                trashes.push(trash);
-                break;
-            case 1:
-                const barrels = await createBarrels();
-                trashes.push(barrels);
-                break;
-            case 2:
-                const jerrycan = await createJerrycan();
-                trashes.push(jerrycan);
-                break;
-            case 3:
-                const oldsink = await createOldSink();
-                trashes.push(oldsink);
-                break;
-            case 4:
-                const sneakers = await createSneakers();
-                trashes.push(sneakers);
-                break;
-        }
+        const trash = await createTrash();
+        trashes.push(trash);
     }
 
     window.addEventListener("resize", onWindowResize);
@@ -391,10 +315,10 @@ function RaycasterRender() {
     );
 
     if (trashesHovered.length > 0) {
-        // const object = trashes.filter((x) => x.trash.children[0].children[0].children[0].children[0].children[0].uuid == trashesHovered[0].object.uuid)[0];
-        // console.log(object);
-        // object.removed = true;
-        // scene.remove(object.trash);
+        const object = trashes.filter((x) => x.trash.children[0].children[0].children[0].children[0].children[0].uuid == trashesHovered[0].object.uuid)[0];
+        console.log(object);
+        object.removed = true;
+        scene.remove(object.trash);
     }
 }
 
