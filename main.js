@@ -11,9 +11,6 @@ import { gsap } from "gsap";
 import boatBaseTextureUrl from "./assets/boat-2/textures/boat_baseColor.png";
 import boatNormalTextureUrl from "./assets/boat-2/textures/boat_normal.png";
 import boatMetallicTextureUrl from "./assets/boat-2/textures/boat_metallicRoughness.png";
-// Models
-import trashModelUrl from "./assets/trash/scene.gltf?raw";
-import boatModelUrl from "./assets/boat-2/scene.gltf?raw";
 
 let camera, scene, renderer;
 let controls, water, sun, frustum, cameraViewProjectionMatrix, raycaster, mousePointer;
@@ -44,7 +41,7 @@ function random(min, max) {
 
 class Boat {
     constructor() {
-        loader.load(boatModelUrl, (gltf) => {
+        loader.load("/boat-2/scene.gltf", (gltf) => {
             scene.add(gltf.scene);
             gltf.scene.scale.set(0.05, 0.05, 0.05);
             gltf.scene.position.set(5, -0.12, 50);
@@ -165,7 +162,7 @@ async function loadModel(url) {
 let boatModel = null;
 async function createTrash() {
     if (!boatModel) {
-        boatModel = await loadModel(trashModelUrl);
+        boatModel = await loadModel("./trash/scene.gltf");
     }
     return new Trash(boatModel.clone());
 }
