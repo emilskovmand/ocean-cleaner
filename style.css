@@ -40,6 +40,15 @@
 	}	
 }
 
+#fishing-net-mouse {
+	position: absolute;
+	top: -30px;
+	left: -30px;
+	max-height: 28px;
+	max-width: 28px;
+	transform: translate(-10px, -7px);
+}
+
 .trash-bar-container {
 	position: relative;
 	height: 30px;
