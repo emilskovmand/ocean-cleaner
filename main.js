@@ -352,6 +352,11 @@ function addProgress(amount = 1) {
         trashParagrah.innerText = `${trashProgress.points} / ${trashProgress.fullFill}`;
     }
 
+    if ((trashProgress.points / trashProgress.fullFill) * 100 == 100) {
+        document.getElementById("modal").style.display = "block";
+        document.body.style.cursor = "default";
+    }
+
     var uiContainer = document.getElementById("ui-container-wrapper");
     var pointUpId = nanoid(12);
     uiContainer.innerHTML += `<span id="point-${pointUpId}" style="left: ${mousePointer.clientX - 3}px;top: ${mousePointer.clientY - 5}px;" class="plus-point-nudge">+ 1</span>`;
@@ -371,11 +376,6 @@ function addProgress(amount = 1) {
     setTimeout(() => {
         document.getElementById(`point-${pointUpId}`).remove();
     }, 1000);
-
-    if (trashProgress.points == 20) {
-        let modal = document.getElementById("modal");
-        modal.style.display = "block";
-    }
 }
 
 function RaycasterRender() {
