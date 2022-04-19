@@ -28,9 +28,9 @@ let trashProgress = {
 
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
-var baseTexture = textureLoader.load("assets/boat-2/textures/boat_baseColor.png");
-var normalTexture = textureLoader.load("assets/boat-2/textures/boat_normal.png");
-var metalnessTexture = textureLoader.load("assets/boat-2/textures/boat_metallicRoughness.png");
+var baseTexture = textureLoader.load("./assets/boat-2/textures/boat_baseColor.png");
+var normalTexture = textureLoader.load("./assets/boat-2/textures/boat_normal.png");
+var metalnessTexture = textureLoader.load("./assets/boat-2/textures/boat_metallicRoughness.png");
 
 function random(min, max) {
     return Math.random() * (max - min) + min;
@@ -38,7 +38,7 @@ function random(min, max) {
 
 class Boat {
     constructor() {
-        loader.load("assets/boat-2/scene.gltf", (gltf) => {
+        loader.load("./assets/boat-2/scene.gltf", (gltf) => {
             scene.add(gltf.scene);
             gltf.scene.scale.set(0.05, 0.05, 0.05);
             gltf.scene.position.set(5, -0.12, 50);
@@ -159,7 +159,7 @@ async function loadModel(url) {
 let boatModel = null;
 async function createTrash() {
     if (!boatModel) {
-        boatModel = await loadModel("assets/trash/scene.gltf");
+        boatModel = await loadModel("./assets/trash/scene.gltf");
     }
     return new Trash(boatModel.clone());
 }
