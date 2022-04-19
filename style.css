@@ -32,6 +32,12 @@
 	}
 }
 
+@media (max-height: 400) {
+	.trash-bar-wrapper {
+		bottom: 150px;
+	}	
+}
+
 .trash-bar-container {
 	position: relative;
 	height: 30px;

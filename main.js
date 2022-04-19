@@ -23,6 +23,7 @@ let KeyActive = {
     right: false,
     leftClick: false,
     rightClick: false,
+    touch: false,
 };
 
 let trashProgress = {
@@ -300,10 +301,10 @@ async function init() {
         mousePointer.y = -(ev.touches[0].clientY / window.innerHeight) * 2 + 1;
         mousePointer.clientX = ev.touches[0].clientX;
         mousePointer.clientY = ev.touches[0].clientY;
-        KeyActive.leftClick = true;
+        KeyActive.touch = true;
     });
     window.addEventListener("touchend", (ev) => {
-        KeyActive.leftClick = false;
+        KeyActive.touch = false;
     });
 }
 
@@ -368,7 +369,7 @@ function RaycasterRender() {
         true
     );
 
-    if (trashesHovered.length > 0 && KeyActive.leftClick) {
+    if (trashesHovered.length > 0 && (KeyActive.leftClick || KeyActive.touch)) {
         const object = trashes.filter((x) => x.trash.children[0].children[0].children[0].children[0].children[0].uuid == trashesHovered[0].object.uuid)[0];
         object.removed = true;
         scene.remove(object.trash);
