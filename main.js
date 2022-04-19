@@ -295,6 +295,16 @@ async function init() {
         mousePointer.clientX = ev.clientX;
         mousePointer.clientY = ev.clientY;
     });
+    window.addEventListener("touchstart", (ev) => {
+        mousePointer.x = (ev.clientX / window.innerWidth) * 2 - 1;
+        mousePointer.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+        mousePointer.clientX = ev.clientX;
+        mousePointer.clientY = ev.clientY;
+        KeyActive.leftClick = true;
+    });
+    window.addEventListener("touchend", (ev) => {
+        KeyActive.leftClick = false;
+    });
 }
 
 function onWindowResize() {
