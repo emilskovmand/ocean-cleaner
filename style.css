@@ -32,12 +32,18 @@
 	}
 }
 
-@media (max-height: 400) {
+@media (max-height: 400px) {
 	.trash-bar-wrapper {
 		bottom: initial;
 		top: 5px;
 		left: 5px;
 	}	
+}
+
+@media (max-width: 1150px) {
+	.modal-header img{
+		opacity: 0;
+	}
 }
 
 #fishing-net-mouse {
@@ -136,8 +142,9 @@ p {
   }
 
   .modal-header img{
-	height: 100px;
-	width: 100px;
+	height: 6rem;
+	width: 6rem;
+	object-fit: cover;
   }
 
   .modal-body{
