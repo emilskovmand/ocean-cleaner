@@ -316,10 +316,11 @@ function CheckWithinViewbox() {
 }
 
 function addProgress(amount = 1) {
-    var bar = document.querySelector(".trash-bar-progresser");
+    var bar = document.getElementById("trash-bar");
     var trashParagrah = document.getElementById("trash-progress");
     trashProgress.points += amount;
-    bar.style.width = (trashProgress.points / trashProgress.fullFill) * 100 + "%";
+    var newWidth = (trashProgress.points / trashProgress.fullFill) * 100 + "%";
+    bar.style.width = newWidth;
     if ((trashProgress.points / trashProgress.fullFill) * 100 >= 100) {
         trashParagrah.innerText = "Task Completed!";
     } else {

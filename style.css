@@ -28,11 +28,14 @@
 
 .trash-bar-container {
 	position: relative;
-	height: 20px;
-	width: 200px;
+	height: 30px;
+	width: 300px;
 	background-color: rgba(0, 0, 0, 0.15);
 	border-radius: 25px;
 	z-index: -1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 p {
@@ -44,8 +47,7 @@ p {
 	top: 0px;
 	left: 0px;
 	z-index: -1;
-	height: 25px;
-	width: 0%;
+	height: 32px;
 	background: linear-gradient(rgba(233, 81, 81, 0.415), rgba(233, 101, 81, 0.715));
 	overflow-x: hidden;
 }
