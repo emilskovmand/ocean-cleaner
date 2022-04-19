@@ -29,7 +29,7 @@ let KeyActive = {
 
 let trashProgress = {
     points: 0,
-    fullFill: 20,
+    fullFill: 50,
 };
 
 var waveSound = document.getElementById("wave-sound");
