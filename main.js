@@ -31,6 +31,9 @@ let trashProgress = {
     fullFill: 20,
 };
 
+var waveSound = document.getElementById("wave-sound");
+var splashSound = document.getElementById("splash-sound");
+
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 var baseTexture = textureLoader.load(boatBaseTextureUrl);
@@ -374,6 +377,8 @@ function RaycasterRender() {
         object.removed = true;
         scene.remove(object.trash);
         addProgress(1);
+        splashSound.currentTime = 0;
+        splashSound.play();
     }
 }
 
