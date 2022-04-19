@@ -24,6 +24,7 @@ let KeyActive = {
     leftClick: false,
     rightClick: false,
     touch: false,
+    isMouse: false,
 };
 
 let trashProgress = {
@@ -264,6 +265,8 @@ async function init() {
     controls.enabled = false;
     controls.update();
 
+    document.body.style.cursor = "none";
+
     const waterUniforms = water.material.uniforms;
 
     for (let i = 0; i < TRASH_COUNT; i++) {
@@ -298,13 +301,16 @@ async function init() {
         mousePointer.y = -(ev.clientY / window.innerHeight) * 2 + 1;
         mousePointer.clientX = ev.clientX;
         mousePointer.clientY = ev.clientY;
+        KeyActive.isMouse = true;
     });
     window.addEventListener("touchstart", (ev) => {
+        KeyActive.touch = true;
+    });
+    window.addEventListener("touchmove", (ev) => {
         mousePointer.x = (ev.touches[0].clientX / window.innerWidth) * 2 - 1;
         mousePointer.y = -(ev.touches[0].clientY / window.innerHeight) * 2 + 1;
         mousePointer.clientX = ev.touches[0].clientX;
         mousePointer.clientY = ev.touches[0].clientY;
-        KeyActive.touch = true;
     });
     window.addEventListener("touchend", (ev) => {
         KeyActive.touch = false;
@@ -382,12 +388,21 @@ function RaycasterRender() {
     }
 }
 
+function FishingNetMove() {
+    if (KeyActive.isMouse) {
+        var fishingNetElement = document.getElementById("fishing-net-mouse");
+        fishingNetElement.style.left = mousePointer.clientX + "px";
+        fishingNetElement.style.top = mousePointer.clientY + "px";
+    }
+}
+
 function animate() {
     requestAnimationFrame(debounce(animate));
     render();
     boat.update();
     CheckWithinViewbox();
     RaycasterRender();
+    FishingNetMove();
 
     for (let i = 0; i < trashes.length; i++) {
         trashes[i].update();
