@@ -170,7 +170,7 @@ async function createTrash() {
 
 let trashes = [];
 let trashesHovered = [];
-const TRASH_COUNT = 150;
+const TRASH_COUNT = 100;
 let boolTest = true;
 
 init();
